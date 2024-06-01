@@ -28,8 +28,8 @@ export const SkeletonHero: FC = async ({}) => {
           <div className={classNames('font-bold tracking-wider uppercase my-3 text-sm text-primary')}>
             We are brewing somethin
           </div>
-          <h1 className={classNames('py-2 font-bold', getTextClass('h1'))}>Your brewski is brewing....</h1>
-          <div className={classNames('whitespace-break-spaces py-6')}>is almost there</div>
+          <h1 className={classNames('font-bold text-4xl md:text-5xl py-2')}>Your brewski is brewing....</h1>
+          <div className={classNames('whitespace-break-spaces py-6 py-10')}>is almost there</div>
         </div>
       </div>
     </Container>
