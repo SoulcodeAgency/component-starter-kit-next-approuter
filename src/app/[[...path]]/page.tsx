@@ -15,7 +15,9 @@ const VERCEL_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` 
 export async function generateMetadata(props: PageParameters): Promise<Metadata> {
   const route = await retrieveRoute(props);
   if (!('compositionApiResponse' in route)) throw new Error('No composition found');
-  const composition = route.compositionApiResponse.composition;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const composition = route?.compositionApiResponse?.composition;
 
   const {
     pageTitle,

@@ -41,6 +41,7 @@ import { testimonialMappings } from './Testimonial';
 import { videoMappings } from './Video';
 import { enrichmentSetterMappings } from './EnrichmentSetter';
 import { pageMapping } from './Page/Page';
+import { BeerRecommendation } from '../components/BeerRecommendation/BeerRecommendation';
 
 export const baseComponentMappings = {
   ...accordionItemMappings,
@@ -86,6 +87,7 @@ export const baseComponentMappings = {
   ...testimonialMappings,
   ...videoMappings,
   ...pageMapping,
+  beerRecommendation: BeerRecommendation,
 };
 
 import { createComponentResolver } from '@/utilities/canvas/componentResolver';

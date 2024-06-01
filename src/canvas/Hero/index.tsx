@@ -7,6 +7,7 @@ import { HeroSideImage } from './HeroSideImage';
 import { HeroBackgroundImage } from './HeroBackgroundImage';
 import { HeroTwoColumns } from './HeroTwoColumns';
 import { HeroDefault } from './Hero';
+import { BeerRecommendationHero } from './BeerRecommendationHero';
 
 export const DEFAULT_TEXT_COLOR = '#000';
 
@@ -62,6 +63,8 @@ export enum HeroVariant {
 const Hero: FC<HeroProps> = props => {
   const { variant } = props.component || {};
   switch (variant) {
+    case 'recommendation':
+      return <BeerRecommendationHero {...props} />;
     case HeroVariant.ImageRight:
     case HeroVariant.ImageLeft:
       return <HeroSideImage {...props} />;

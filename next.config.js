@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
+
+const { withUniformConfig } = require('@uniformdev/canvas-next-rsc/config');
+
 const nextConfig = {
+  experimental: {
+    ppr: true,
+  },
   reactStrictMode: true,
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version,
@@ -11,4 +17,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withUniformConfig(nextConfig);
