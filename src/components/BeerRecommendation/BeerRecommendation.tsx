@@ -16,24 +16,19 @@ export type Slots = 'recommendations';
 
 const getLocationData = async (context: { searchParams: Record<string, string | undefined> | undefined }) => {
   const allHeaders = headers();
-
   let ip = context.searchParams?.['ip'] ?? allHeaders.get('x-forwarded-for');
 
+  // localhost override
   if (ip === '::1') {
     ip = '8.8.4.4';
   }
 
-  const response = await fetch(`https://ipinfo.io/${ip}?token=58d3b46d7f9303`);
-
-  const data = (await response.json()) as {
-    city: string;
-    region: string;
-    loc: string;
-  };
-
-  console.log({ data });
-
-  return data;
+  const lat = allHeaders.get('x-vercel-ip-latitude') ?? '37.7825';
+  const long = allHeaders.get('x-vercel-ip-longitude') ?? '-122.435';
+  const city = allHeaders.get('x-vercel-ip-city') ?? 'San Francisco';
+  const region = allHeaders.get('x-vercel-ip-country-region') ?? 'California';
+  console.log({ ip, lat, long, city, region });
+  return { city, region, lat, long };
 };
 
 export const BeerRecommendation = async ({
@@ -44,80 +39,32 @@ export const BeerRecommendation = async ({
 }: ComponentProps<Parameters, Slots>) => {
   return (
     <>
-      {/* <h1>
-        Hello <LocationTextWrapper context={context} type="city" />,{' '}
-        <LocationTextWrapper context={context} type="region" />!
-      </h1> */}
       <div>
-        Its <CurrentTemperatureWrapper context={context} />
-        °F currently where you are.
+        <Suspense fallback={'00.0'}>
+          <CurrentTemperature context={context} />
+        </Suspense>
       </div>
       <div>
-        {' '}
-        <DrinkSuggestionWrapper
-          component={component}
-          context={context}
-          contextInstance={contextInstance}
-          slots={slots}
-        />
+        <Suspense fallback={<SkeletonHero />}>
+          <DrinkSuggestion component={component} context={context} contextInstance={contextInstance} slots={slots} />
+        </Suspense>
       </div>
     </>
   );
 };
 
-// const LocationTextWrapper = ({
-//   context,
-//   type,
-// }: Pick<ComponentProps<Parameters, Slots>, 'context'> & {
-//   type: 'region' | 'city';
-// }) => {
-//   return (
-//     <Suspense fallback={null}>
-//       <LocationText context={context} type={type} />
-//     </Suspense>
-//   );
-// };
-
-// const LocationText = async ({
-//   context,
-//   type,
-// }: Pick<ComponentProps<Parameters, Slots>, 'context'> & {
-//   type: 'region' | 'city';
-// }) => {
-//   const data = await getLocationData(context);
-//   const text = data[type];
-//   return text;
-// };
-
-const CurrentTemperatureWrapper = ({ context }: Pick<ComponentProps<Parameters, Slots>, 'context'>) => {
-  return (
-    <Suspense fallback={'00.0'}>
-      <CurrentTemperature context={context} />
-    </Suspense>
-  );
-};
-
 const CurrentTemperature = async ({ context }: Pick<ComponentProps<Parameters, Slots>, 'context'>) => {
-  const data = await getLocationData(context);
-  const [lat, long] = data.loc.split(',');
+  const { long, lat, city, region } = await getLocationData(context);
   const weatherResponse = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m&temperature_unit=fahrenheit`
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m`
   );
   const weatherData = await weatherResponse.json();
-  const current: number = weatherData.current.temperature_2m;
-  return current.toString();
-};
-
-const DrinkSuggestionWrapper = ({
-  context,
-  component,
-  slots,
-  contextInstance,
-}: Pick<ComponentProps<Parameters, Slots>, 'context' | 'component' | 'slots' | 'contextInstance'>) => {
+  console.log({ weatherData });
+  const current: number = weatherData?.current?.temperature_2m;
   return (
-    <Suspense fallback={<SkeletonHero />}>
-      <DrinkSuggestion component={component} context={context} contextInstance={contextInstance} slots={slots} />
-    </Suspense>
+    <h1>
+      It is currently {current?.toString()}°C in {city}, {region}...
+    </h1>
   );
 };
 
@@ -129,17 +76,14 @@ const DrinkSuggestion = async ({
   slots,
   contextInstance,
 }: Pick<ComponentProps<Parameters, Slots>, 'context' | 'component' | 'slots' | 'contextInstance'>) => {
-  const data = await getLocationData(context);
-
-  const [lat, long] = data.loc.split(',');
-
+  const { lat, long } = await getLocationData(context);
   const weatherResponse = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m&temperature_unit=fahrenheit`
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m`
   );
 
   const weatherData = await weatherResponse.json();
-
-  const current: number = weatherData.current.temperature_2m;
+  console.log({ weatherData });
+  const current: number = weatherData?.current?.temperature_2m;
   const roundedDown = Math.floor(current);
 
   const updateEnrichments: {
