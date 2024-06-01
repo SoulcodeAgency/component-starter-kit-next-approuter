@@ -59,7 +59,7 @@ export const BeerRecommendation = async ({
 };
 
 const CurrentTemperature = async ({ context }: Pick<ComponentProps<Parameters, Slots>, 'context'>) => {
-  const { long, lat, city, region } = await getLocationData(context);
+  const { long, lat, city } = await getLocationData(context);
   const weatherResponse = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m`
   );
