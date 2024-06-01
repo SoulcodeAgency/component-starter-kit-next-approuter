@@ -1,9 +1,7 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-
 import { Container, SideImage } from './atoms';
 import { DEFAULT_TEXT_COLOR } from './';
-import { getTextClass } from '@/utilities/styling';
 
 export const SkeletonHero: FC = async ({}) => {
   const currentColor = DEFAULT_TEXT_COLOR;
@@ -29,7 +27,7 @@ export const SkeletonHero: FC = async ({}) => {
             We are brewing somethin
           </div>
           <h1 className={classNames('font-bold text-4xl md:text-5xl py-2')}>Your brewski is brewing....</h1>
-          <div className={classNames('whitespace-break-spaces py-6 py-10')}>is almost there</div>
+          <div className={classNames('whitespace-break-spaces py-10')}>is almost there</div>
         </div>
       </div>
     </Container>
