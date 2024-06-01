@@ -28,27 +28,8 @@ export const SkeletonHero: FC = async ({}) => {
           <div className={classNames('font-bold tracking-wider uppercase my-3 text-sm text-primary')}>
             We are brewing somethin
           </div>
-          <h1 className={classNames('py-2 font-bold', getTextClass('h1'))}>Your brew....</h1>
+          <h1 className={classNames('py-2 font-bold', getTextClass('h1'))}>Your brewski is brewing....</h1>
           <div className={classNames('whitespace-break-spaces py-6')}>is almost there</div>
-          {/*           
-            {(Boolean(primaryButtonCopy)) && (
-              <PrimaryButton
-                component={component}
-                context={context}
-                animationType={primaryButtonAnimationType}
-                primaryButtonLink={primaryButtonLink}
-                primaryButtonStyle={primaryButtonStyle}
-              />
-            )}
-            {(Boolean(secondaryButtonCopy)) && (
-              <SecondaryButton
-                component={component}
-                context={context}
-                animationType={secondaryButtonAnimationType}
-                secondaryButtonLink={secondaryButtonLink}
-                secondaryButtonStyle={secondaryButtonStyle}
-              />
-            )} */}
         </div>
       </div>
     </Container>

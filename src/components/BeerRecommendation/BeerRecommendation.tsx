@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { ContextUpdateTransfer } from '@uniformdev/canvas-next-rsc';
-import { ComponentProps, UniformSlot } from '@uniformdev/canvas-next-rsc/component';
+import { ComponentProps, ResolveComponentResult, UniformSlot } from '@uniformdev/canvas-next-rsc/component';
 
 import { AppDirectoryServerContext } from '@uniformdev/canvas-next-rsc-shared';
 import { SkeletonHero } from '@/canvas/Hero/SkeletonHero';
@@ -37,10 +37,15 @@ export const BeerRecommendation = async ({
   contextInstance,
   slots,
 }: ComponentProps<Parameters, Slots>) => {
+  const placeholder = (
+    <div className="pt-16 flex flex-col text-center items-center w-full">
+      <h1 className="text-2xl md:text-5xl font-medium">We are loading your weather data here...</h1>
+    </div>
+  );
   return (
     <>
       <div>
-        <Suspense fallback={'00.0'}>
+        <Suspense fallback={placeholder}>
           <CurrentTemperature context={context} />
         </Suspense>
       </div>
@@ -59,12 +64,14 @@ const CurrentTemperature = async ({ context }: Pick<ComponentProps<Parameters, S
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m`
   );
   const weatherData = await weatherResponse.json();
-  console.log({ weatherData });
+
   const current: number = weatherData?.current?.temperature_2m;
   return (
-    <h1>
-      It is currently {current?.toString()}°C in {city}, {region}...
-    </h1>
+    <div className="pt-16 flex flex-col text-center items-center w-full">
+      <h1 className="text-2xl md:text-5xl font-medium">
+        It is currently {current?.toString()}°C in {decodeURI(city)}, {region}...
+      </h1>
+    </div>
   );
 };
 
@@ -82,11 +89,10 @@ const DrinkSuggestion = async ({
   );
 
   const weatherData = await weatherResponse.json();
-  console.log({ weatherData });
   const current: number = weatherData?.current?.temperature_2m;
   const roundedDown = Math.floor(current);
 
-  const updateEnrichments: {
+  let updateEnrichments: {
     cat: string;
     key: string;
     str: number;
@@ -98,23 +104,11 @@ const DrinkSuggestion = async ({
     },
   ];
 
-  console.log({ contextInstance, updateEnrichments });
-  const existing = contextInstance
-    ? Object.keys(contextInstance?.scores).filter(key => key.startsWith(SUGGESTION_PREFIX))
-    : [];
+  const existing = Object.keys(contextInstance.scores).filter(key => key.startsWith(SUGGESTION_PREFIX));
 
+  // skipping enrichments if those are already present
   if (existing.length) {
-    existing.forEach(existingItem => {
-      const [cat, key] = existingItem.split('_');
-
-      if (key !== updateEnrichments[0].key) {
-        updateEnrichments.push({
-          cat,
-          key,
-          str: -contextInstance?.scores[existingItem],
-        });
-      }
-    });
+    updateEnrichments = [];
   }
 
   return (
@@ -128,4 +122,12 @@ const DrinkSuggestion = async ({
       <UniformSlot context={context} data={component} slot={slots.recommendations} />
     </>
   );
+};
+
+export type ResolveComponentResultWithType = ResolveComponentResult & {
+  type: string;
+};
+
+export const beerRecommendationMapping = {
+  beerRecommendation: BeerRecommendation,
 };

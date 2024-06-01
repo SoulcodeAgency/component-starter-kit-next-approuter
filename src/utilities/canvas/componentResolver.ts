@@ -10,4 +10,5 @@ export const createComponentResolver =
   (mappings: ComponentMappings) =>
   ({ component }: { component: ComponentInstance }) => ({
     component: mappings[component?.type] || DefaultNotImplementedComponent,
+    includeContext: component?.type === 'beerRecommendation' ? true : false,
   });

@@ -1,5 +1,6 @@
 import { ComponentProps } from '@uniformdev/canvas-next-rsc/component';
 import { AccordionItem } from './AccordionItem';
+import { ResolveComponentResultWithType } from '@/components/BeerRecommendation/BeerRecommendation';
 
 type Styles = {
   container?: string;
@@ -14,8 +15,10 @@ export type AccordionItemProps = ComponentProps<{
   styles?: Styles;
 }>;
 
-export const accordionItemMappings = {
-  accordionItem: AccordionItem,
+export const accordionItemMappings: ResolveComponentResultWithType = {
+  type: 'accordionItem',
+  component: AccordionItem,
+  includeContext: true,
 };
 
 export default AccordionItem;
