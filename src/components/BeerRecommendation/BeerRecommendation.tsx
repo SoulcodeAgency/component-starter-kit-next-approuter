@@ -69,7 +69,7 @@ const CurrentTemperature = async ({ context }: Pick<ComponentProps<Parameters, S
   return (
     <div className="pt-16 flex flex-col text-center items-center w-full">
       <h1 className="text-2xl md:text-5xl font-medium">
-        It is currently {current?.toString()}°C in {decodeURI(city)}, {region}...
+        It is currently {current?.toString()}°C in {decodeURI(city)}...
       </h1>
     </div>
   );
