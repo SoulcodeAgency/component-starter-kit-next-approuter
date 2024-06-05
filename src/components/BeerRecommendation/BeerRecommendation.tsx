@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { headers } from 'next/headers';
 import { ContextUpdateTransfer } from '@uniformdev/canvas-next-rsc';
 import { ComponentProps, ResolveComponentResult, UniformSlot } from '@uniformdev/canvas-next-rsc/component';
 
@@ -15,19 +14,10 @@ export type Parameters = {
 export type Slots = 'recommendations';
 
 const getLocationData = (context: { searchParams: Record<string, string | undefined> | undefined }) => {
-  const allHeaders = headers();
-  let ip = context.searchParams?.['ip'] ?? allHeaders.get('x-forwarded-for');
-
-  // localhost override
-  if (ip === '::1') {
-    ip = '8.8.4.4';
-  }
-
-  const lat = allHeaders.get('x-vercel-ip-latitude') ?? '37.7825';
-  const long = allHeaders.get('x-vercel-ip-longitude') ?? '-122.435';
-  const city = allHeaders.get('x-vercel-ip-city') ?? 'San Francisco';
-  const region = allHeaders.get('x-vercel-ip-country-region') ?? 'California';
-  console.log({ ip, lat, long, city, region });
+  const lat = context.searchParams?.['lat'] ?? '37.7825';
+  const long = context.searchParams?.['long'] ?? '-122.435';
+  const city = context.searchParams?.['city'] ?? 'San Francisco';
+  const region = context.searchParams?.['region'] ?? 'California';
   return { city, region, lat, long };
 };
 
