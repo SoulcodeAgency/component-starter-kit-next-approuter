@@ -107,12 +107,12 @@ const DrinkSuggestion = async ({
     key: string;
     str: number;
   }[] = [
-      {
-        cat: SUGGESTION_PREFIX,
-        key: 'temp',
-        str: roundedDown,
-      },
-    ];
+    {
+      cat: SUGGESTION_PREFIX,
+      key: 'temp',
+      str: roundedDown,
+    },
+  ];
 
   const existing = Object.keys(contextInstance.scores).filter(key => key.startsWith(SUGGESTION_PREFIX));
 
