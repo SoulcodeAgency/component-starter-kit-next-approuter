@@ -14,7 +14,7 @@ export type Parameters = {
 
 export type Slots = 'recommendations';
 
-const getLocationData = async (context: { searchParams: Record<string, string | undefined> | undefined }) => {
+const getLocationData = (context: { searchParams: Record<string, string | undefined> | undefined }) => {
   const allHeaders = headers();
   let ip = context.searchParams?.['ip'] ?? allHeaders.get('x-forwarded-for');
 
@@ -59,7 +59,7 @@ export const BeerRecommendation = async ({
 };
 
 const CurrentTemperature = async ({ context }: Pick<ComponentProps<Parameters, Slots>, 'context'>) => {
-  const { long, lat, city } = await getLocationData(context);
+  const { long, lat, city } = getLocationData(context);
   const weatherResponse = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m`,
     {
@@ -88,7 +88,7 @@ const DrinkSuggestion = async ({
   slots,
   contextInstance,
 }: Pick<ComponentProps<Parameters, Slots>, 'context' | 'component' | 'slots' | 'contextInstance'>) => {
-  const { lat, long } = await getLocationData(context);
+  const { lat, long } = getLocationData(context);
   const weatherResponse = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current=temperature_2m`,
     {
@@ -107,12 +107,12 @@ const DrinkSuggestion = async ({
     key: string;
     str: number;
   }[] = [
-    {
-      cat: SUGGESTION_PREFIX,
-      key: 'temp',
-      str: roundedDown,
-    },
-  ];
+      {
+        cat: SUGGESTION_PREFIX,
+        key: 'temp',
+        str: roundedDown,
+      },
+    ];
 
   const existing = Object.keys(contextInstance.scores).filter(key => key.startsWith(SUGGESTION_PREFIX));
 
