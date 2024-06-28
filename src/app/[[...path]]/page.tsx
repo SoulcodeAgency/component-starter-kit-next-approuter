@@ -60,3 +60,5 @@ export default async function Home(props: PageParameters) {
   const route = await retrieveRoute(props);
   return <UniformComposition {...props} route={route} resolveComponent={componentResolver} mode="static" />;
 }
+
+export const dynamic = 'force-static';
