@@ -8,7 +8,7 @@ import { componentResolver } from '../../canvas/index';
 // export { generateStaticParams } from '@uniformdev/canvas-next-rsc';
 
 // Optionally, enable edge rendering mode to run render on the CDN nodes
-// export const runtime = 'edge';
+export const runtime = 'edge';
 
 const VERCEL_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '';
 
